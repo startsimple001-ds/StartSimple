@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>StarSimple - Você diz o que quer. A gente mostra como fazer.</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Safe area handling for mobile */
+        .safe-area-top {
+            padding-top: env(safe-area-inset-top);
+        }
+        .safe-area-bottom {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        
+        /* Mobile tap highlights */
+        button, a {
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* Better mobile scrolling */
+        html {
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* Larger touch targets */
+        button, .btn {
+            min-height: 44px;
+            min-width: 44px;
+        }
+        
+        /* Hide scrollbar but keep functionality */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        .idea-card {
+            transition: all 0.3s ease;
+        }
+        .idea-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .chat-bubble {
+            border-radius: 20px;
+            position: relative;
+        }
+        .chat-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 20px;
+            border-width: 10px 10px 0;
+            border-style: solid;
+            border-color: white transparent;
+        }
+        .ai-bubble:after {
+            left: auto;
+            right: 20px;
+            border-color: #e2e8f0 transparent;
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.5s;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+        
+        /* Modal transitions */
+        .modal {
+            transition: opacity 0.3s ease;
+        }
+        .modal-content {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        .modal.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .modal.hidden .modal-content {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen font-sans antialiased">
+    <!-- Mobile App Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-10 safe-area-top">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex items-center justify-between">
+                <button class="text-gray-600 p-2 -ml-2">
+                    <i class="fas fa-arrow-left text-xl"></i>
+                </button>
+                <h1 class="text-xl font-bold text-gray-800 flex items-center">
+                    <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>
+                    StarSimple
+                </h1>
+                <button onclick="showLogin()" class="text-gray-600 p-2 -mr-2">
+                    <i class="fas fa-user text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 pb-24"> <!-- Added pb-24 for bottom nav spacing -->
+        <!-- Hero Section -->
+        <section class="mb-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl shadow-xl p-6 text-white">
+            <div class="flex flex-col items-center">
+                <div class="w-full mb-6">
+                    <h2 class="text-3xl font-bold mb-4">Transforme suas ideias em ação</h2>
+                    <p class="text-lg mb-6">Descubra como começar seu negócio, projeto ou investimento com orientação passo a passo.</p>
+                    <button onclick="showLogin()" class="w-full bg-white text-blue-600 hover:bg-gray-100 px-6 py-4 rounded-full font-bold shadow-lg active:scale-95 transition duration-200">
+                        Comece com StarSimple <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+                <div class="w-full flex justify-center">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                         alt="Pessoas trabalhando" 
+                         class="rounded-lg shadow-xl w-full h-auto object-cover">
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Mentor Section -->
+        <section class="mb-12">
+            <div class="bg-white rounded-xl shadow-xl p-6">
+                <div class="flex items-center mb-4">
+                    <div class="bg-blue-100 p-3 rounded-full mr-3">
+                        <i class="fas fa-robot text-blue-500 text-xl"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-gray-800">Mentor Inteligente StarSimple</h2>
+                </div>
+                <p class="text-gray-600 mb-4">Escreva o que você quer fazer e receba sugestões personalizadas.</p>
+
+                <div id="chat-container" class="bg-gray-100 rounded-lg p-4 mb-4 h-64 overflow-y-auto space-y-3 scrollbar-hide">
+                    <div class="bg-white rounded-lg p-3 max-w-[80%] chat-bubble fade-in">
+                        <p class="text-gray-700">Quero ganhar dinheiro vendendo doce</p>
+                    </div>
+                    <div class="bg-gray-200 rounded-lg p-3 max-w-[80%] ml-auto ai-bubble fade-in">
+                        <p class="text-gray-700">Ótima ideia! O StarSimple recomenda:</p>
+                        <ul class="list-disc pl-5 mt-2">
+                            <li class="mb-1">Morango do Amor (Comece com R$30)</li>
+                            <li class="mb-1">Brigadeiro Gourmet (R$50 inicial)</li>
+                            <li class="mb-1">Doces para Festas (R$100 inicial)</li>
+                        </ul>
+                        <button class="mt-2 text-blue-500 text-sm font-medium hover:text-blue-700 transition">Ver detalhes →</button>
+                    </div>
+                </div>
+
+                <div class="flex">
+                    <input id="user-input" type="text" placeholder="O que você quer fazer?" 
+                           class="flex-grow border border-gray-300 rounded-l-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <button id="send-btn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-3 rounded-r-lg font-medium transition transform hover:scale-105">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Idea Feed -->
+        <section class="mb-12">
+            <div class="flex items-center mb-6">
+                <div class="bg-purple-100 p-3 rounded-full mr-3">
+                    <i class="fas fa-lightbulb text-purple-500 text-xl"></i>
+                </div>
+                <h2 class="text-xl font-bold text-gray-800">Feed de Ideias StarSimple</h2>
+            </div>
+
+            <!-- Categories -->
+            <div class="flex overflow-x-auto pb-4 mb-6 space-x-2 scrollbar-hide">
+                <button data-category="all" class="category-btn whitespace-nowrap bg-blue-500 text-white px-4 py-2 rounded-full font-medium shadow-sm transition">Todas</button>
+                <button data-category="food" class="category-btn whitespace-nowrap bg-white hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-full font-medium shadow-sm transition">Comida</button>
+                <button data-category="cheap" class="category-btn whitespace-nowrap bg-white hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-full font-medium shadow-sm transition">Até R$50</button>
+                <button data-category="home" class="category-btn whitespace-nowrap bg-white hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-full font-medium shadow-sm transition">Casa</button>
+                <button data-category="invest" class="category-btn whitespace-nowrap bg-white hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-full font-medium shadow-sm transition">Investir</button>
+                <button data-category="free" class="category-btn whitespace-nowrap bg-white hover:bg-gray-100 text-gray-800 px-4 py-2 rounded-full font-medium shadow-sm transition">Sem gastar</button>
+            </div>
+
+            <!-- Idea Cards -->
+            <div id="ideas-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Idea 1 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden idea-card transition duration-300 hover:shadow-lg" data-categories="food cheap">
+                    <div class="h-40 bg-gradient-to-r from-red-100 to-pink-100 flex items-center justify-center relative">
+                        <i class="fas fa-stroopwafel text-5xl text-red-400"></i>
+                        <div class="absolute top-3 right-3 bg-white rounded-full p-2 shadow-md">
+                            <i class="fas fa-fire text-red-500"></i>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-lg font-bold text-gray-800">Morango do Amor</h3>
+                            <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">R$30</span>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">Comece vendendo morangos banhados em chocolate com pouco investimento.</p>
+
+                        <div class="flex items-center text-sm text-gray-500 mb-4">
+                            <i class="fas fa-list-ol mr-2"></i>
+                            <span>5 passos simples</span>
+                        </div>
+
+                        <div class="flex justify-between">
+                            <button class="save-idea text-blue-500 hover:text-blue-700 text-sm font-medium flex items-center transition">
+                                <i class="far fa-bookmark mr-1"></i> Salvar
+                            </button>
+                            <button class="text-purple-500 hover:text-purple-700 text-sm font-medium flex items-center transition">
+                                Ver detalhes <i class="fas fa-chevron-right ml-1 text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Idea 2 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden idea-card transition duration-300 hover:shadow-lg" data-categories="invest cheap">
+                    <div class="h-40 bg-gradient-to-r from-blue-100 to-cyan-100 flex items-center justify-center relative">
+                        <i class="fas fa-chart-line text-5xl text-blue-400"></i>
+                        <div class="absolute top-3 right-3 bg-white rounded-full p-2 shadow-md">
+                            <i class="fas fa-star text-yellow-500"></i>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-lg font-bold text-gray-800">Investir em Tesouro</h3>
+                            <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">R$50</span>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">Comece a investir com pouco dinheiro no Tesouro Direto.</p>
+
+                        <div class="flex items-center text-sm text-gray-500 mb-4">
+                            <i class="fas fa-list-ol mr-2"></i>
+                            <span>3 passos simples</span>
+                        </div>
+
+                        <div class="flex justify-between">
+                            <button class="save-idea text-blue-500 hover:text-blue-700 text-sm font-medium flex items-center transition">
+                                <i class="far fa-bookmark mr-1"></i> Salvar
+                            </button>
+                            <button class="text-purple-500 hover:text-purple-700 text-sm font-medium flex items-center transition">
+                                Ver detalhes <i class="fas fa-chevron-right ml-1 text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Idea 3 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden idea-card transition duration-300 hover:shadow-lg" data-categories="home">
+                    <div class="h-40 bg-gradient-to-r from-yellow-100 to-orange-100 flex items-center justify-center relative">
+                        <i class="fas fa-tshirt text-5xl text-yellow-400"></i>
+                        <div class="absolute top-3 right-3 bg-white rounded-full p-2 shadow-md">
+                            <i class="fas fa-bolt text-orange-500"></i>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-lg font-bold text-gray-800">Customização de Camisetas</h3>
+                            <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">R$100</span>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">Personalize camisetas com técnicas simples e venda online.</p>
+
+                        <div class="flex items-center text-sm text-gray-500 mb-4">
+                            <i class="fas fa-list-ol mr-2"></i>
+                            <span>7 passos simples</span>
+                        </div>
+
+                        <div class="flex justify-between">
+                            <button class="save-idea text-blue-500 hover:text-blue-700 text-sm font-medium flex items-center transition">
+                                <i class="far fa-bookmark mr-1"></i> Salvar
+                            </button>
+                            <button class="text-purple-500 hover:text-purple-700 text-sm font-medium flex items-center transition">
+                                Ver detalhes <i class="fas fa-chevron-right ml-1 text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-8">
+                <button id="load-more" class="bg-white hover:bg-gray-100 text-gray-800 px-6 py-3 rounded-full font-medium shadow-md transition transform hover:scale-105">
+                    Carregar mais ideias <i class="fas fa-plus-circle ml-2"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- Weekly Challenge -->
+        <section class="mb-12">
+            <div class="bg-white rounded-xl shadow-xl p-6">
+                <div class="flex items-center mb-4">
+                    <div class="bg-orange-100 p-3 rounded-full mr-3">
+                        <i class="fas fa-calendar-alt text-orange-500 text-xl"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-gray-800">Desafio Semanal StarSimple</h2>
+                </div>
+
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 rounded-r-lg">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-bullhorn text-yellow-500 mt-1 mr-3"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-800">Esta semana:</h3>
+                            <p class="mt-1 text-gray-700 font-medium">"Monte sua primeira lista de produtos"</p>
+                            <p class="mt-2 text-sm text-gray-600">Leva apenas 15 minutos e é o primeiro passo para começar!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+                            <span class="text-blue-500 font-bold">1</span>
+                        </div>
+                        <div>
+                            <h3 class="text-gray-800 font-medium">Escolha 3 produtos</h3>
+                            <p class="text-gray-600 text-sm">Pode ser qualquer coisa que você queira vender ou já tenha em casa.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+                            <span class="text-blue-500 font-bold">2</span>
+                        </div>
+                        <div>
+                            <h3 class="text-gray-800 font-medium">Tire fotos simples</h3>
+                            <p class="text-gray-600 text-sm">Use seu celular com boa iluminação natural.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+                            <span class="text-blue-500 font-bold">3</span>
+                        </div>
+                        <div>
+                            <h3 class="text-gray-800 font-medium">Defina preços básicos</h3>
+                            <p class="text-gray-600 text-sm">Custo do produto + 30% é um bom começo.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
+                    <button id="start-challenge" class="flex-grow bg-blue-500 hover:bg-blue-600 text-white px-4 py-3 rounded-lg font-medium transition transform hover:scale-105 shadow-md">
+                        Começar desafio <i class="fas fa-play-circle ml-2"></i>
+                    </button>
+                    <button id="skip-challenge" class="bg-white hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg font-medium border border-gray-300 transition">
+                        Pular esta semana <i class="fas fa-forward ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Learning -->
+        <section class="mb-12">
+            <div class="flex items-center mb-6">
+                <div class="bg-green-100 p-3 rounded-full mr-3">
+                    <i class="fas fa-book-open text-green-500 text-xl"></i>
+                </div>
+                <h2 class="text-xl font-bold text-gray-800">Aprendizado Rápido StarSimple</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Tip 1 -->
+                <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition">
+                    <div class="flex items-center mb-3">
+                        <div class="bg-green-100 p-2 rounded-full mr-3">
+                            <i class="fas fa-share-alt text-green-500"></i>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-800">Como divulgar com pouco</h3>
+                    </div>
+                    <p class="text-gray-600 text-sm mb-4">Aprenda estratégias simples para divulgar seu produto sem gastar muito dinheiro.</p>
+                    <button class="read-tip text-green-500 hover:text-green-700 text-sm font-medium flex items-center transition" data-tip="divulgar">
+                        Ler dica <i class="fas fa-chevron-right ml-1 text-xs"></i>
+                    </button>
+                </div>
+
+                <!-- Tip 2 -->
+                <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition">
+                    <div class="flex items-center mb-3">
+                        <div class="bg-purple-100 p-2 rounded-full mr-3">
+                            <i class="fas fa-tag text-purple-500"></i>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-800">Como precificar produtos</h3>
+                    </div>
+                    <p class="text-gray-600 text-sm mb-4">Guia rápido para definir preços que cubram seus custos e ainda gerem lucro.</p>
+                    <button class="read-tip text-purple-500 hover:text-purple-700 text-sm font-medium flex items-center transition" data-tip="precificar">
+                        Ler dica <i class="fas fa-chevron-right ml-1 text-xs"></i>
+                    </button>
+                </div>
+
+                <!-- Tip 3 -->
+                <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition">
+                    <div class="flex items-center mb-3">
+                        <div class="bg-blue-100 p-2 rounded-full mr-3">
+                            <i class="fas fa-piggy-bank text-blue-500"></i>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-800">Onde aplicar dinheiro com segurança</h3>
+                    </div>
+                    <p class="text-gray-600 text-sm mb-4">Conheça as opções mais seguras para começar a investir seu dinheiro.</p>
+                    <button class="read-tip text-blue-500 hover:text-blue-700 text-sm font-medium flex items-center transition" data-tip="investir">
+                        Ler dica <i class="fas fa-chevron-right ml-1 text-xs"></i>
+                    </button>
+                </div>
+
+                <!-- Tip 4 -->
+                <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition">
+                    <div class="flex items-center mb-3">
+                        <div class="bg-yellow-100 p-2 rounded-full mr-3">
+                            <i class="fas fa-mobile-alt text-yellow-500"></i>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-800">Apps úteis para empreendedores</h3>
+                    </div>
+                    <p class="text-gray-600 text-sm mb-4">Lista dos melhores aplicativos gratuitos para gerenciar seu negócio.</p>
+                    <button class="read-tip text-yellow-500 hover:text-yellow-700 text-sm font-medium flex items-center transition" data-tip="apps">
+                        Ler dica <i class="fas fa-chevron-right ml-1 text-xs"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Achievements -->
+        <section>
+            <div class="bg-white rounded-xl shadow-xl p-6">
+                <div class="flex items-center mb-4">
+                    <div class="bg-red-100 p-3 rounded-full mr-3">
+                        <i class="fas fa-trophy text-red-500 text-xl"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-gray-800">Suas Conquistas no StarSimple</h2>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <!-- Achievement 1 -->
+                    <div class="bg-gray-50 rounded-lg p-4 text-center hover:bg-white transition cursor-pointer">
+                        <div class="relative w-16 h-16 mx-auto mb-2">
+                            <svg class="w-full h-full" viewBox="0 0 36 36">
+                                <path d="M18 2.0845
+                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                                    fill="none"
+                                    stroke="#e5e7eb"
+                                    stroke-width="3"
+                                    stroke-dasharray="100, 100"
+                                />
+                                <path class="progress-ring__circle"
+                                    d="M18 2.0845
+                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                                    fill="none"
+                                    stroke="#3b82f6"
+                                    stroke-width="3"
+                                    stroke-dasharray="0, 100"
+                                />
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <i class="fas fa-bookmark text-blue-500 text-2xl"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-gray-800 font-medium text-sm">Ideias Salvas</h3>
+                        <p class="text-gray-500 text-xs"><span id="saved-count">0</span>/5</p>
+                    </div>
+
+                    <!-- Achievement 2 -->
+                    <div class="bg-gray-50 rounded-lg p-4 text-center hover:bg-white transition cursor-pointer">
+                        <div class="relative w-16 h-16 mx-auto mb-2">
+                            <svg class="w-full h-full" viewBox="0 0 36 36">
+                                <path d="M18 2.0845
+                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                                    fill="none"
+                                    stroke="#e5e7eb"
+                                    stroke-width="3"
+                                    stroke-dasharray="100, 100"
+                                />
+                                <path class="progress-ring__circle"
+                                    d="M18 2.0845
+                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                                    fill="none"
+                                    stroke="#f59e0b"
+                                    stroke-width="3"
+                                    stroke-dasharray="0, 100"
+                                />
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <i class="fas fa-check-circle text-yellow-500 text-2xl"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-gray-800 font-medium text-sm">Desafios</h3>
+                        <p class="text-gray-500 text-xs"><span id="challenge-count">0</span>/1</p>
+                    </div>
+
+                    <!-- Achievement 3 -->
+                    <div class="bg-gray-50 rounded-lg p-4 text-center hover:bg-white transition cursor-pointer">
+                        <div class="relative w-16 h-16 mx-auto mb-2">
+                            <svg class="w-full h-full" viewBox="0 0 36 36">
+                                <path d="M18 2.0845
+                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                                    fill="none"
+                                    stroke="#e5e7eb"
+                                    stroke-width="3"
+                                    stroke-dasharray="100, 100"
+                                />
+                                <path class="progress-ring__circle"
+                                    d="M18 2.0845
+                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                                    fill="none"
+                                    stroke="#10b981"
+                                    stroke-width="3"
+                                    stroke-dasharray="0, 100"
+                                />
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <i class="fas fa-lightbulb text-green-500 text-2xl"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-gray-800 font-medium text-sm">Dicas Lidas</h3>
+                        <p class="text-gray-500 text-xs"><span id="tips-count">0</span>/3</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="modal-content bg-white rounded-xl shadow-2xl max-w-md w-full p-6 relative mx-4">
+            <button onclick="closeModal('login-modal')" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Entrar no StarSimple</h2>
+                <p class="text-gray-600 mt-2">Acesse suas ideias salvas e conquistas</p>
+            </div>
+            <form class="space-y-4">
+                <div>
+                    <label for="login-email" class="block text-sm font-medium text-gray-700 mb-1">E-mail</label>
+                    <input type="email" id="login-email" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="login-password" class="block text-sm font-medium text-gray-700 mb-1">Senha</label>
+                    <input type="password" id="login-password" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <button type="button" onclick="login()" class="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-3 rounded-lg font-medium transition">
+                    Entrar
+                </button>
+                <div class="text-center text-sm text-gray-600">
+                    Não tem conta? <button type="button" onclick="showRegister()" class="text-blue-500 hover:text-blue-700">Cadastre-se</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="register-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="modal-content bg-white rounded-xl shadow-2xl max-w-md w-full p-6 relative mx-4">
+            <button onclick="closeModal('register-modal')" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Junte-se ao StarSimple</h2>
+                <p class="text-gray-600 mt-2">Comece sua jornada empreendedora</p>
+            </div>
+            <form class="space-y-4">
+                <div>
+                    <label for="register-name" class="block text-sm font-medium text-gray-700 mb-1">Nome completo</label>
+                    <input type="text" id="register-name" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="register-email" class="block text-sm font-medium text-gray-700 mb-1">E-mail</label>
+                    <input type="email" id="register-email" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="register-password" class="block text-sm font-medium text-gray-700 mb-1">Senha</label>
+                    <input type="password" id="register-password" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="register-confirm" class="block text-sm font-medium text-gray-700 mb-1">Confirmar senha</label>
+                    <input type="password" id="register-confirm" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <button type="button" onclick="register()" class="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-3 rounded-lg font-medium transition">
+                    Cadastrar
+                </button>
+                <div class="text-center text-sm text-gray-600">
+                    Já tem conta? <button type="button" onclick="showLogin()" class="text-blue-500 hover:text-blue-700">Faça login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around py-3 safe-area-bottom z-20">
+        <a href="#" class="flex flex-col items-center text-blue-500">
+            <i class="fas fa-home text-xl"></i>
+            <span class="text-xs mt-1">Início</span>
+        </a>
+        <a href="#ideas-container" class="flex flex-col items-center text-gray-500">
+            <i class="fas fa-lightbulb text-xl"></i>
+            <span class="text-xs mt-1">Ideias</span>
+        </a>
+        <a href="#achievements" class="flex flex-col items-center text-gray-500">
+            <i class="fas fa-trophy text-xl"></i>
+            <span class="text-xs mt-1">Conquistas</span>
+        </a>
+        <a href="#" class="flex flex-col items-center text-gray-500">
+            <i class="fas fa-cog text-xl"></i>
+            <span class="text-xs mt-1">Config</span>
+        </a>
+    </nav>
+
+    <script>
+        // Modal functions
+        function showLogin() {
+            document.getElementById('login-modal').classList.remove('hidden');
+            document.getElementById('register-modal').classList.add('hidden');
+        }
+
+        function showRegister() {
+            document.getElementById('register-modal').classList.remove('hidden');
+            document.getElementById('login-modal').classList.add('hidden');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        // Auth functions
+        function login() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            // Simple validation
+            if (!email || !password) {
+                alert('Por favor, preencha todos os campos');
+                return;
+            }
+            
+            // In a real app, this would call an API
+            alert(`Login realizado com: ${email}`);
+            closeModal('login-modal');
+            
+            // Update UI for logged in user
+            const loginBtn = document.querySelector('header button');
+            loginBtn.innerHTML = '<i class="fas fa-user-circle text-xl"></i>';
+        }
+
+        function register() {
+            const name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const confirm = document.getElementById('register-confirm').value;
+            
+            // Simple validation
+            if (!name || !email || !password || !confirm) {
+                alert('Por favor, preencha todos os campos');
+                return;
+            }
+            
+            if (password !== confirm) {
+                alert('As senhas não coincidem');
+                return;
+            }
+            
+            // In a real app, this would call an API
+            alert(`Conta criada para: ${name} (${email})`);
+            closeModal('register-modal');
+            showLogin();
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // State management
+            const appState = {
+                savedIdeas: JSON.parse(localStorage.getItem('savedIdeas')) || [],
+                completedChallenges: JSON.parse(localStorage.getItem('completedChallenges')) || [],
+                readTips: JSON.parse(localStorage.getItem('readTips')) || []
+            };
+
+            // Update achievements display
+            function updateAchievements() {
+                // Saved ideas
+                const savedCount = appState.savedIdeas.length;
+                document.getElementById('saved-count').textContent = savedCount;
+                const savedProgress = Math.min((savedCount / 5) * 100, 100);
+                document.querySelectorAll('.progress-ring__circle')[0].setAttribute('stroke-dasharray', `${savedProgress}, 100`);
+                
+                // Challenges
+                const challengeCount = appState.completedChallenges.length;
+                document.getElementById('challenge-count').textContent = challengeCount;
+                const challengeProgress = Math.min((challengeCount / 1) * 100, 100);
+                document.querySelectorAll('.progress-ring__circle')[1].setAttribute('stroke-dasharray', `${challengeProgress}, 100`);
+                
+                // Tips
+                const tipsCount = appState.readTips.length;
+                document.getElementById('tips-count').textContent = tipsCount;
+                const tipsProgress = Math.min((tipsCount / 3) * 100, 100);
+                document.querySelectorAll('.progress-ring__circle')[2].setAttribute('stroke-dasharray', `${tipsProgress}, 100`);
+            }
+
+            // Initialize achievements
+            updateAchievements();
+
+            // Initialize saved ideas
+            document.querySelectorAll('.idea-card').forEach(card => {
+                const title = card.querySelector('h3').textContent;
+                if (appState.savedIdeas.includes(title)) {
+                    const saveBtn = card.querySelector('.save-idea');
+                    const icon = saveBtn.querySelector('i');
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                    saveBtn.classList.remove('text-blue-500');
+                    saveBtn.classList.add('text-blue-600');
+                }
+            });
+
+            // Chat functionality
+            const chatContainer = document.getElementById('chat-container');
+            const userInput = document.getElementById('user-input');
+            const sendBtn = document.getElementById('send-btn');
+
+            function addUserMessage(message) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'bg-white rounded-lg p-3 max-w-[80%] chat-bubble fade-in';
+                messageDiv.innerHTML = `<p class="text-gray-700">${message}</p>`;
+                chatContainer.appendChild(messageDiv);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+
+            function addAiResponse(response) {
+                const responseDiv = document.createElement('div');
+                responseDiv.className = 'bg-gray-200 rounded-lg p-3 max-w-[80%] ml-auto ai-bubble fade-in';
+                responseDiv.innerHTML = `
+                    <p class="text-gray-700">${response.text}</p>
+                    ${response.list ? `
+                        <ul class="list-disc pl-5 mt-2">
+                            ${response.list.map(item => `<li class="mb-1">${item}</li>`).join('')}
+                        </ul>
+                    ` : ''}
+                    ${response.link ? `<a href="${response.link}" class="mt-2 inline-block text-blue-500 hover:text-blue-700 text-sm font-medium transition">${response.linkText || 'Ver detalhes'} →</a>` : 
+                    '<button class="mt-2 text-blue-500 hover:text-blue-700 text-sm font-medium transition">Ver detalhes →</button>'}
+                `;
+                chatContainer.appendChild(responseDiv);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+
+            function generateAiResponse(userMessage) {
+                // Simple response logic - in a real app this would call an API
+                const responses = {
+                    'ganhar dinheiro': {
+                        text: 'Ótimo objetivo! Aqui estão algumas ideias para começar:',
+                        list: [
+                            'Venda de produtos caseiros (doces, artesanato)',
+                            'Serviços freelancer (design, redação)',
+                            'Revenda de produtos'
+                        ],
+                        link: '#ideas-container',
+                        linkText: 'Ver ideias'
+                    },
+                    'investir': {
+                        text: 'Começar a investir é uma ótima decisão. Algumas opções:',
+                        list: [
+                            'Tesouro Direto (a partir de R$30)',
+                            'CDB (a partir de R$100)',
+                            'Fundos de investimento'
+                        ],
+                        link: '#ideas-container',
+                        linkText: 'Ver opções'
+                    },
+                    'empreender': {
+                        text: 'Que legal que quer empreender! Algumas dicas iniciais:',
+                        list: [
+                            'Identifique um problema para resolver',
+                            'Comece pequeno e teste sua ideia',
+                            'Use redes sociais para divulgar'
+                        ],
+                        link: '#quick-learning',
+                        linkText: 'Ver dicas'
+                    },
+                    'doce': {
+                        text: 'Vender doces é uma ótima ideia! Sugestões:',
+                        list: [
+                            'Morango do Amor (Comece com R$30)',
+                            'Brigadeiro Gourmet (R$50 inicial)',
+                            'Doces para Festas (R$100 inicial)'
+                        ],
+                        link: '#ideas-container',
+                        linkText: 'Ver ideias'
+                    }
+                };
+
+                // Find the best matching response
+                let bestMatch = { 
+                    text: "Entendi seu interesse. Aqui estão algumas sugestões gerais:", 
+                    list: [
+                        "Venda de produtos artesanais", 
+                        "Prestação de serviços", 
+                        "Revenda de produtos populares"
+                    ],
+                    link: '#ideas-container',
+                    linkText: 'Explorar ideias'
+                };
+
+                for (const [keyword, response] of Object.entries(responses)) {
+                    if (userMessage.toLowerCase().includes(keyword)) {
+                        bestMatch = response;
+                        break;
+                    }
+                }
+
+                // Simulate typing delay
+                setTimeout(() => {
+                    addAiResponse(bestMatch);
+                }, 1000);
+            }
+
+            sendBtn.addEventListener('click', function() {
+                const message = userInput.value.trim();
+                if (message) {
+                    addUserMessage(message);
+                    userInput.value = '';
+                    generateAiResponse(message);
+                }
+            });
+
+            userInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendBtn.click();
+                }
+            });
+
+            // Save idea functionality
+            document.querySelectorAll('.save-idea').forEach(button => {
+                button.addEventListener('click', function() {
+                    const icon = this.querySelector('i');
+                    icon.classList.toggle('far');
+                    icon.classList.toggle('fas');
+
+                    const ideaCard = this.closest('.idea-card');
+                    const ideaTitle = ideaCard.querySelector('h3').textContent;
+
+                    if (icon.classList.contains('fas')) {
+                        // Save idea
+                        this.classList.add('text-blue-600');
+                        this.classList.remove('text-blue-500');
+
+                        if (!appState.savedIdeas.includes(ideaTitle)) {
+                            appState.savedIdeas.push(ideaTitle);
+                            localStorage.setItem('savedIdeas', JSON.stringify(appState.savedIdeas));
+                            updateAchievements();
+                        }
+                    } else {
+                        // Unsave idea
+                        this.classList.add('text-blue-500');
+                        this.classList.remove('text-blue-600');
+
+                        appState.savedIdeas = appState.savedIdeas.filter(title => title !== ideaTitle);
+                        localStorage.setItem('savedIdeas', JSON.stringify(appState.savedIdeas));
+                        updateAchievements();
+                    }
+                });
+            });
+
+            // Filter ideas by category
+            document.querySelectorAll('.category-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    // Update active button
+                    document.querySelectorAll('.category-btn').forEach(btn => {
+                        btn.classList.remove('bg-blue-500', 'text-white');
+                        btn.classList.add('bg-white', 'text-gray-800');
+                    });
+
+                    this.classList.add('bg-blue-500', 'text-white');
+                    this.classList.remove('bg-white', 'text-gray-800');
+
+                    // Filter ideas
+                    const category = this.getAttribute('data-category');
+                    const ideas = document.querySelectorAll('.idea-card');
+
+                    ideas.forEach(idea => {
+                        if (category === 'all' || idea.getAttribute('data-categories').includes(category)) {
+                            idea.style.display = 'block';
+                        } else {
+                            idea.style.display = 'none';
+                        }
+                    });
+                });
+            });
+
+            // Load more ideas
+            document.getElementById('load-more').addEventListener('click', function() {
+                // In a real app, this would fetch more ideas from an API
+                const newIdeas = [
+                    {
+                        title: "Venda de Pães Caseiros",
+                        price: "R$50",
+                        description: "Comece a fazer pães artesanais em casa e venda para vizinhos.",
+                        steps: "4 passos simples",
+                        categories: "food cheap",
+                        icon: "fas fa-bread-slice",
+                        color: "from-amber-100 to-orange-100",
+                        iconColor: "text-amber-400"
+                    },
+                    {
+                        title: "Aulas Online",
+                        price: "Grátis",
+                        description: "Ensine algo que você sabe através de plataformas digitais.",
+                        steps: "5 passos simples",
+                        categories: "free",
+                        icon: "fas fa-laptop",
+                        color: "from-blue-100 to-indigo-100",
+                        iconColor: "text-indigo-400"
+                    }
+                ];
+
+                newIdeas.forEach(idea => {
+                    const ideaCard = document.createElement('div');
+                    ideaCard.className = 'bg-white rounded-xl shadow-md overflow-hidden idea-card transition duration-300 hover:shadow-lg';
+                    ideaCard.setAttribute('data-categories', idea.categories);
+                    
+                    ideaCard.innerHTML = `
+                        <div class="h-40 bg-gradient-to-r ${idea.color} flex items-center justify-center relative">
+                            <i class="${idea.icon} text-5xl ${idea.iconColor}"></i>
+                            <div class="absolute top-3 right-3 bg-white rounded-full p-2 shadow-md">
+                                <i class="fas fa-plus ${idea.iconColor}"></i>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-lg font-bold text-gray-800">${idea.title}</h3>
+                                <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">${idea.price}</span>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-4">${idea.description}</p>
+
+                            <div class="flex items-center text-sm text-gray-500 mb-4">
+                                <i class="fas fa-list-ol mr-2"></i>
+                                <span>${idea.steps}</span>
+                            </div>
+
+                            <div class="flex justify-between">
+                                <button class="save-idea text-blue-500 hover:text-blue-700 text-sm font-medium flex items-center transition">
+                                    <i class="far fa-bookmark mr-1"></i> Salvar
+                                </button>
+                                <button class="text-purple-500 hover:text-purple-700 text-sm font-medium flex items-center transition">
+                                    Ver detalhes <i class="fas fa-chevron-right ml-1 text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+
+                    document.getElementById('ideas-container').appendChild(ideaCard);
+                    
+                    // Add event listener to the new save button
+                    ideaCard.querySelector('.save-idea').addEventListener('click', function() {
+                        const icon = this.querySelector('i');
+                        icon.classList.toggle('far');
+                        icon.classList.toggle('fas');
+
+                        const ideaTitle = ideaCard.querySelector('h3').textContent;
+
+                        if (icon.classList.contains('fas')) {
+                            // Save idea
+                            this.classList.add('text-blue-600');
+                            this.classList.remove('text-blue-500');
+
+                            if (!appState.savedIdeas.includes(ideaTitle)) {
+                                appState.savedIdeas.push(ideaTitle);
+                                localStorage.setItem('savedIdeas', JSON.stringify(appState.savedIdeas));
+                                updateAchievements();
+                            }
+                        } else {
+                            // Unsave idea
+                            this.classList.add('text-blue-500');
+                            this.classList.remove('text-blue-600');
+
+                            appState.savedIdeas = appState.savedIdeas.filter(title => title !== ideaTitle);
+                            localStorage.setItem('savedIdeas', JSON.stringify(appState.savedIdeas));
+                            updateAchievements();
+                        }
+                    });
+                });
+
+                this.textContent = 'Ideias carregadas!';
+                this.classList.add('bg-green-100', 'text-green-800');
+                setTimeout(() => {
+                    this.textContent = 'Carregar mais ideias';
+                    this.classList.remove('bg-green-100', 'text-green-800');
+                }, 2000);
+            });
+
+            // Weekly challenge
+            document.getElementById('start-challenge').addEventListener('click', function() {
+                if (!appState.completedChallenges.includes('lista-produtos')) {
+                    appState.completedChallenges.push('lista-produtos');
+                    localStorage.setItem('completedChallenges', JSON.stringify(appState.completedChallenges));
+                    updateAchievements();
+
+                    // Show completion message
+                    const challengeSection = document.querySelector('#start-challenge').closest('section');
+                    const successDiv = document.createElement('div');
+                    successDiv.className = 'bg-green-50 border-l-4 border-green-400 p-4 mb-6 rounded-r-lg fade-in';
+                    successDiv.innerHTML = `
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-medium text-gray-800">Desafio iniciado!</h3>
+                                <p class="mt-1 text-gray-700">Complete as tarefas para ganhar sua conquista.</p>
+                            </div>
+                        </div>
+                    `;
+                    challengeSection.insertBefore(successDiv, challengeSection.querySelector('.space-y-4'));
+                    
+                    setTimeout(() => {
+                        successDiv.remove();
+                    }, 5000);
+                } else {
+                    alert('Você já completou este desafio!');
+                }
+            });
+
+            document.getElementById('skip-challenge').addEventListener('click', function() {
+                alert('Desafio pulado. Um novo desafio aparecerá na próxima semana.');
+            });
+
+            // Read tips
+            document.querySelectorAll('.read-tip').forEach(button => {
+                button.addEventListener('click', function() {
+                    const tipId = this.getAttribute('data-tip');
+
+                    if (!appState.readTips.includes(tipId)) {
+                        appState.readTips.push(tipId);
+                        localStorage.setItem('readTips', JSON.stringify(appState.readTips));
+                        updateAchievements();
+                    }
+
+                    // Show tip content - in a real app this would open a modal or new page
+                    const tipTitle = this.closest('div').querySelector('h3').textContent;
+                    const tipColor = this.classList.contains('text-green-500') ? 'green' : 
+                                     this.classList.contains('text-purple-500') ? 'purple' :
+                                     this.classList.contains('text-blue-500') ? 'blue' : 'yellow';
+                    
+                    const modal = document.createElement('div');
+                    modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+                    modal.innerHTML = `
+                        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 relative">
+                            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <div class="flex items-center mb-4">
+                                <div class="bg-${tipColor}-100 p-2 rounded-full mr-3">
+                                    <i class="${this.querySelector('i').className.replace('text-xs', '')} text-${tipColor}-500"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-gray-800">${tipTitle}</h3>
+                            </div>
+                            <div class="text-gray-600 mb-6">
+                                <p>Este é um exemplo do conteúdo que seria exibido para a dica "${tipTitle}". Em uma aplicação real, aqui estaria o conteúdo completo da dica com informações detalhadas e possivelmente imagens ou vídeos ilustrativos.</p>
+                            </div>
+                            <button class="w-full bg-${tipColor}-500 hover:bg-${tipColor}-600 text-white px-4 py-2 rounded-lg font-medium transition">
+                                Fechar
+                            </button>
+                        </div>
+                    `;
+                    
+                    document.body.appendChild(modal);
+                    
+                    modal.querySelectorAll('button').forEach(btn => {
+                        btn.addEventListener('click', () => {
+                            modal.remove();
+                        });
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
